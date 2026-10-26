@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------------------
 const VEHICLES = [{
         id: 1,
+        specs: ["Petrol","Automatic","2 seats","~50 km/l"],
         image: "Honda_Activa_6G.jpg",
         name: "Honda Activa 6G",
         type: "Bike",
@@ -15,6 +16,7 @@ const VEHICLES = [{
     },
     {
         id: 2,
+        specs: ["Petrol","5-speed","2 seats","~35 km/l"],
         image: "Royal_Enfield_Classic_350_(2017_Model_Year).jpg",
         name: "Royal Enfield Classic 350",
         type: "Bike",
@@ -25,6 +27,7 @@ const VEHICLES = [{
     },
     {
         id: 3,
+        specs: ["Petrol","Automatic","2 seats","~50 km/l"],
         image: "TVS_Jupiter.jpg",
         name: "TVS Jupiter",
         type: "Bike",
@@ -35,6 +38,7 @@ const VEHICLES = [{
     },
     {
         id: 4,
+        specs: ["Petrol","6-speed","2 seats","~35 km/l"],
         image: "KTM_DUKE_200.jpg",
         name: "KTM Duke 200",
         type: "Bike",
@@ -45,6 +49,7 @@ const VEHICLES = [{
     },
     {
         id: 5,
+        specs: ["Petrol","Manual","5 seats","~22 km/l"],
         image: "Maruti_Suzuki_Swift_LXi.jpg",
         name: "Maruti Suzuki Swift",
         type: "Car",
@@ -55,6 +60,7 @@ const VEHICLES = [{
     },
     {
         id: 6,
+        specs: ["Petrol","Manual","5 seats","~22 km/l"],
         image: "2022_Maruti_Suzuki_Baleno_Alpha_(India)_front_view.jpg",
         name: "Maruti Suzuki Baleno",
         type: "Car",
@@ -65,6 +71,7 @@ const VEHICLES = [{
     },
     {
         id: 7,
+        specs: ["Petrol","Manual","5 seats","~16 km/l"],
         image: "2021_Hyundai_Creta_SX(O)_CRDi_(India)_front_view.jpg",
         name: "Hyundai Creta",
         type: "Car",
@@ -75,6 +82,7 @@ const VEHICLES = [{
     },
     {
         id: 8,
+        specs: ["Diesel","Manual","7 seats","~14 km/l"],
         image: "Toyota_Innova_Crysta.jpg",
         name: "Toyota Innova Crysta",
         type: "Car",
@@ -147,27 +155,34 @@ function safeNext(n) {
 function flashNext(msg, cat) { try { sessionStorage.setItem("re_flash", JSON.stringify({ msg, cat })); } catch (e) {} }
 
 function showFlash(msg, cat) {
-    let wrap = document.querySelector(".flash-wrap");
+    let wrap = document.querySelector(".toast-wrap");
     if (!wrap) {
         wrap = document.createElement("div");
-        wrap.className = "flash-wrap";
-        document.querySelector("main").before(wrap);
+        wrap.className = "toast-wrap";
+        wrap.setAttribute("aria-live", "polite");
+        document.body.appendChild(wrap);
     }
     const el = document.createElement("div");
-    el.className = "flash flash-" + cat;
-    el.textContent = msg;
+    el.className = "toast toast-" + (cat || "success");
+    el.innerHTML = `<span class="toast-ico">${cat === "error" ? "!" : "✓"}</span><span></span>`;
+    el.lastChild.textContent = msg;
     wrap.appendChild(el);
-    setTimeout(() => {
-        el.style.transition = "opacity .4s";
-        el.style.opacity = "0";
-        setTimeout(() => el.remove(), 400);
-    }, 4000);
+    requestAnimationFrame(() => el.classList.add("in"));
+    setTimeout(() => { el.classList.remove("in"); setTimeout(() => el.remove(), 300); }, 4200);
 }
 
 // ---------------------------------------------------------------------------
 // SHARED LAYOUT (header + footer injected into every page)
 // ---------------------------------------------------------------------------
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+const TABS = [
+    ["index.html", "home", "Home", '<path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'],
+    ["vehicles.html", "vehicles", "Vehicles", '<path d="M5 16l1.6-5.2A2 2 0 0 1 8.5 9.4h7a2 2 0 0 1 1.9 1.4L19 16v3h-2.5v-1.5h-9V19H5zM7.5 14.5h9"/><circle cx="8" cy="15" r=".6"/><circle cx="16" cy="15" r=".6"/>'],
+    ["booking.html", "booking", "Book", '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 15h6"/>'],
+    ["trips.html", "trips", "Trips", '<path d="M7 4h10a1 1 0 0 1 1 1v15l-3-2-3 2-3-2-3 2V5a1 1 0 0 1 1-1zM9 9h6M9 13h6"/>'],
+    ["profile.html", "profile", "Profile", '<circle cx="12" cy="8" r="4"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/>'],
+];
 
 function renderLayout() {
     const page = document.body.dataset.page;
@@ -176,25 +191,28 @@ function renderLayout() {
         `<a href="${href}" class="${cls} ${page === key ? "active" : ""}">${label}</a>`;
 
     const authLinks = user ?
-        `<span class="nav-user">Hi, ${esc(user.name.split(" ")[0])}</span><a href="#" id="logoutLink">Logout</a>` :
+        `${a("profile.html", `<span class="nav-avatar">${esc(user.name.trim()[0] || "U").toUpperCase()}</span>${esc(user.name.split(" ")[0])}`, "profile", "nav-user")}` :
         `${a("login.html", "Login", "login")}<a href="login.html?tab=register" class="nav-signup">Sign Up</a>`;
 
     document.body.insertAdjacentHTML("afterbegin", `
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="offline-bar hidden" id="offlineBar">You're offline — showing saved data.</div>
 <header class="site-header">
   <div class="nav-wrap">
     <a href="index.html" class="logo"><span class="logo-mark">R</span><span class="logo-text">RideEasy</span></a>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
-    <nav class="main-nav" id="mainNav">
+    <nav class="main-nav" id="mainNav" aria-label="Main">
       ${a("index.html", "Home", "home")}
       ${a("vehicles.html", "Vehicles", "vehicles")}
-      ${a("booking.html", "Booking", "booking")}
+      ${a("booking.html", "Book", "booking")}
+      ${a("trips.html", "My Trips", "trips")}
       ${a("documents.html", "Documents", "documents")}
       ${authLinks}
-      ${a("admin.html", "Admin", "admin", "nav-admin")}
     </nav>
+    <a href="${user ? "profile.html" : "login.html"}" class="header-avatar" aria-label="${user ? "Profile" : "Login"}">${user ? esc(user.name.trim()[0] || "U").toUpperCase() : "→"}</a>
   </div>
   <div class="road-line" aria-hidden="true"></div>
 </header>`);
+    document.querySelector("main").id = "main";
 
     document.querySelector("main").insertAdjacentHTML("afterend", `
 <footer class="site-footer">
@@ -205,7 +223,7 @@ function renderLayout() {
     </div>
     <div class="footer-links">
       <h4>Explore</h4>
-      <a href="vehicles.html">Vehicles</a><a href="booking.html">Booking</a>
+      <a href="vehicles.html">Vehicles</a><a href="booking.html">Booking</a><a href="trips.html">My Trips</a>
       <a href="documents.html">Documents</a><a href="admin.html">Admin Dashboard</a>
     </div>
     <div class="footer-note">
@@ -214,16 +232,10 @@ function renderLayout() {
     </div>
   </div>
   <div class="footer-bottom">© 2026 RideEasy Demo Project. All sample data is fictional.</div>
-</footer>`);
-
-    const lo = document.getElementById("logoutLink");
-    if (lo) lo.addEventListener("click", e => {
-        e.preventDefault();
-        logout();
-    });
-    const t = document.getElementById("navToggle"),
-        n = document.getElementById("mainNav");
-    t.addEventListener("click", () => n.classList.toggle("open"));
+</footer>
+<nav class="tab-bar" aria-label="Primary">
+  ${TABS.map(([href, key, label, icon]) => `<a href="${href}" class="tab ${page === key ? "active" : ""}" ${page === key ? 'aria-current="page"' : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icon}</svg><span>${label}</span></a>`).join("")}
+</nav>`);
 
     try {
         const f = JSON.parse(sessionStorage.getItem("re_flash") || "null");
@@ -234,32 +246,76 @@ function renderLayout() {
     } catch (e) {}
 }
 
+// Saved (favourite) vehicles, per browser
+const getSaved = () => load("re_saved", []);
+function toggleSaved(id) {
+    const s = getSaved(), i = s.indexOf(id);
+    if (i >= 0) s.splice(i, 1); else s.push(id);
+    save("re_saved", s);
+    return i < 0;
+}
+
+// PWA: service worker, install prompt, offline indicator
+let deferredInstall = null;
+function initPwa() {
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
+    window.addEventListener("beforeinstallprompt", e => {
+        e.preventDefault();
+        deferredInstall = e;
+        const b = document.getElementById("installBtn");
+        if (b) b.hidden = false;
+    });
+    const bar = document.getElementById("offlineBar");
+    const sync = () => bar && bar.classList.toggle("hidden", navigator.onLine);
+    window.addEventListener("online", sync);
+    window.addEventListener("offline", sync);
+    sync();
+}
+
 // ---------------------------------------------------------------------------
 // VEHICLE CARD
 // ---------------------------------------------------------------------------
 function vehicleCard(v, withDetails) {
     const badge = v.available ? "badge-available" : "badge-unavailable";
+    const saved = getSaved().includes(v.id);
     const book = v.available ?
         `<a href="booking.html?vehicle=${v.id}" class="btn btn-small btn-primary">Book Now</a>` :
         `<button class="btn btn-small btn-disabled" disabled>Unavailable</button>`;
     return `
-<div class="vehicle-card" data-type="${v.type}">
+<div class="vehicle-card" data-type="${v.type}" data-id="${v.id}">
   <div class="vehicle-image">${vehiclePhoto(v)}
-    <span class="badge ${badge}">${v.available ? "Available" : "Unavailable"}</span></div>
+    <span class="badge ${badge}">${v.available ? "Available" : "Unavailable"}</span>
+    <button class="fav-btn ${saved ? "on" : ""}" data-fav="${v.id}" aria-label="${saved ? "Remove from saved" : "Save vehicle"}" aria-pressed="${saved}">${saved ? "♥" : "♡"}</button></div>
   <div class="vehicle-info">
     <span class="vehicle-type">${v.type}</span>
     <h3>${esc(v.name)}</h3>
+    <div class="spec-chips">${v.specs.slice(1, 4).map(s => `<span>${esc(s)}</span>`).join("")}</div>
     ${withDetails ? `<p class="vehicle-desc">${esc(v.desc)}</p>` : ""}
     <p class="vehicle-price">₹${v.price} <span>/ day</span></p>
     <div class="vehicle-actions">
       ${withDetails
-        ? `<button class="btn btn-small btn-outline js-view-details" data-id="${v.id}">View Details</button>`
-        : `<a href="vehicles.html" class="btn btn-small btn-outline">View Details</a>`}
+        ? `<button class="btn btn-small btn-outline js-view-details" data-id="${v.id}">Details</button>`
+        : `<a href="vehicles.html" class="btn btn-small btn-outline">Details</a>`}
       ${book}
     </div>
   </div>
 </div>`;
 }
+
+// Heart buttons work on any page that lists vehicle cards.
+document.addEventListener("click", e => {
+    const b = e.target.closest("[data-fav]");
+    if (!b) return;
+    e.preventDefault();
+    const on = toggleSaved(+b.dataset.fav);
+    b.classList.toggle("on", on);
+    b.textContent = on ? "♥" : "♡";
+    b.setAttribute("aria-pressed", on);
+    showFlash(on ? "Saved to your favourites" : "Removed from favourites", "success");
+    document.dispatchEvent(new CustomEvent("saved-changed"));
+});
 
 // ---------------------------------------------------------------------------
 // PAGE LOGIC
@@ -267,34 +323,68 @@ function vehicleCard(v, withDetails) {
 const pages = {};
 
 pages.home = () => {
-  document.getElementById("featuredGrid").innerHTML = VEHICLES.slice(0, 4).map(v => vehicleCard(v, false)).join("");
+  document.getElementById("featuredGrid").innerHTML = VEHICLES.filter(v => v.available).slice(0, 4).map(v => vehicleCard(v, false)).join("");
+  const hv = document.getElementById("heroPhotos");
+  hv.innerHTML = [[2, "hp-1"], [5, "hp-2"], [1, "hp-3"]].map(([id, cls]) => {
+    const v = VEHICLES.find(x => x.id === id);
+    return `<div class="hero-photo ${cls}">${vehiclePhoto(v, 600)}<span>${esc(v.name)}</span></div>`;
+  }).join("");
+  document.getElementById("quickBook").addEventListener("submit", e => {
+    e.preventDefault();
+    const loc = document.getElementById("quickLoc").value.trim();
+    location.href = "booking.html" + (loc ? "?loc=" + encodeURIComponent(loc) : "");
+  });
 };
 
 pages.vehicles = () => {
   const grid = document.getElementById("vehicleGrid");
-  grid.innerHTML = VEHICLES.map(v => vehicleCard(v, true)).join("");
-  const btns = document.querySelectorAll(".filter-btn");
-  btns.forEach(btn => btn.addEventListener("click", () => {
-    btns.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    grid.querySelectorAll(".vehicle-card").forEach(c => {
-      c.style.display = (btn.dataset.filter === "All" || c.dataset.type === btn.dataset.filter) ? "flex" : "none";
-    });
-  }));
+  const q = document.getElementById("vSearch"), sort = document.getElementById("vSort");
+  const count = document.getElementById("resultCount"), empty = document.getElementById("vEmpty");
+  const btns = [...document.querySelectorAll("#vFilters .filter-btn")];
+  const params = new URLSearchParams(location.search);
+  let filter = params.get("saved") ? "Saved" : (["Bike", "Car"].includes(params.get("type")) ? params.get("type") : "All");
+
+  const render = () => {
+    btns.forEach(b => b.classList.toggle("active", b.dataset.filter === filter));
+    const term = q.value.trim().toLowerCase();
+    const saved = getSaved();
+    let list = VEHICLES.filter(v =>
+      (filter === "All" || v.type === filter || (filter === "Available" && v.available) || (filter === "Saved" && saved.includes(v.id))) &&
+      (!term || (v.name + " " + v.type + " " + v.desc + " " + v.specs.join(" ")).toLowerCase().includes(term)));
+    if (sort.value === "low") list.sort((a, b) => a.price - b.price);
+    if (sort.value === "high") list.sort((a, b) => b.price - a.price);
+    grid.innerHTML = list.map(v => vehicleCard(v, true)).join("");
+    empty.classList.toggle("hidden", list.length > 0);
+    count.textContent = list.length + (list.length === 1 ? " vehicle" : " vehicles");
+  };
+  btns.forEach(b => b.addEventListener("click", () => { filter = b.dataset.filter; render(); }));
+  q.addEventListener("input", render);
+  sort.addEventListener("change", render);
+  document.getElementById("vReset").addEventListener("click", () => { q.value = ""; sort.value = "featured"; filter = "All"; render(); });
+  document.addEventListener("saved-changed", () => { if (filter === "Saved") render(); });
+  render();
+
   const modal = document.getElementById("detailsModal");
+  const close = () => modal.classList.remove("open");
   grid.addEventListener("click", e => {
     const b = e.target.closest(".js-view-details");
     if (!b) return;
     const v = VEHICLES.find(x => x.id === +b.dataset.id);
-    document.getElementById("modalIcon").innerHTML = vehiclePhoto(v, 800);
+    document.getElementById("modalIcon").innerHTML = vehiclePhoto(v, 900);
     document.getElementById("modalType").textContent = v.type;
     document.getElementById("modalName").textContent = v.name;
     document.getElementById("modalDesc").textContent = v.desc;
+    document.getElementById("modalSpecs").innerHTML = v.specs.map(s => `<span>${esc(s)}</span>`).join("");
     document.getElementById("modalPrice").innerHTML = "₹" + v.price + " <span>/ day</span>";
+    const bk = document.getElementById("modalBook");
+    bk.href = v.available ? "booking.html?vehicle=" + v.id : "#";
+    bk.textContent = v.available ? "Book Now" : "Unavailable";
+    bk.classList.toggle("btn-disabled", !v.available);
     modal.classList.add("open");
   });
-  document.getElementById("modalClose").addEventListener("click", () => modal.classList.remove("open"));
-  modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("open"); });
+  document.getElementById("modalClose").addEventListener("click", close);
+  modal.addEventListener("click", e => { if (e.target === modal) close(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
 };
 
 pages.login = () => {
@@ -338,7 +428,6 @@ pages.login = () => {
     if (pw !== confirm) errors.push("Passwords do not match.");
     const users = getUsers();
     if (users.some(u => u.email === email)) errors.push("An account with this email already exists. Please log in.");
-    if (paymentRadios.find(el => el.checked)?.value === "UPI" && !validUpi()) errors.push("Enter a valid UPI ID (e.g. name@bank).");
     if (errors.length) return errors.forEach(m => showFlash(m, "error"));
     users.push({ name, email, mobile, passwordHash: await hashPassword(pw) });
     save("re_users", users);
@@ -380,10 +469,20 @@ pages.booking = () => {
     document.getElementById("durationOut").textContent = days ? days + " day(s)" : "-- day(s)";
     const total = v ? days * v.price : 0;
     document.getElementById("costOut").textContent = "₹" + total;
+    const sv = document.getElementById("selectedVehicle");
+    sv.classList.toggle("hidden", !v);
+    if (v) sv.innerHTML = `<div class="sv-photo">${vehiclePhoto(v, 400)}</div>
+      <div class="sv-info"><span class="vehicle-type">${v.type}</span><h3>${esc(v.name)}</h3>
+      <div class="spec-chips">${v.specs.map(s => `<span>${esc(s)}</span>`).join("")}</div>
+      <p class="sv-price">${days ? `₹${v.price} × ${days} day${days > 1 ? "s" : ""} = <strong>₹${total}</strong>` : `₹${v.price} <span>/ day</span>`}</p></div>`;
     const paymentTotal = document.getElementById("paymentTotal");
     if (paymentTotal) paymentTotal.textContent = "₹" + total;
   };
   [vehicleSelect, pickup, ret].forEach(el => el.addEventListener("change", update));
+  pickup.addEventListener("change", () => {
+    ret.min = pickup.value || today;
+    if (ret.value && ret.value < pickup.value) { ret.value = pickup.value; update(); }
+  });
   const paymentRadios = [...document.querySelectorAll('input[name="paymentMethod"]')];
   const updatePaymentMethod = () => {
     const method = paymentRadios.find(el => el.checked)?.value || "UPI";
@@ -502,6 +601,8 @@ pages.booking = () => {
     mapOpen.href = "https://www.google.com/maps/search/?api=1&query=" + enc;
     mapDir.href = "https://www.google.com/maps/dir/?api=1&destination=" + enc;
   };
+  const preLoc = new URLSearchParams(location.search).get("loc");
+  if (preLoc) { locInput.value = preLoc; showMap(); }
   locInput.addEventListener("input", () => { clearTimeout(mapTimer); mapTimer = setTimeout(showMap, 600); });
   document.getElementById("useMyLocation").addEventListener("click", () => {
     if (!navigator.geolocation) { showFlash("Location is not supported on this device.", "error"); return; }
@@ -537,7 +638,8 @@ pages.booking = () => {
     const days = daysBetween();
     const b = {
       id: bookings.length ? Math.max(...bookings.map(x => x.id)) + 1 : 1,
-      userEmail: user.email, name, mobile: mobile.value, vehicle: v.name,
+      userEmail: user.email, name, mobile: mobile.value, vehicle: v.name, vehicleId: v.id,
+      createdAt: new Date().toISOString(),
       pickupDate: pickup.value, returnDate: ret.value, location: location_,
       days, totalCost: days * v.price, status: "Pending",
       paymentMethod: paymentRadios.find(el => el.checked)?.value || "UPI",
@@ -563,7 +665,7 @@ pages.booking = () => {
         <div><span>Status</span><strong class="status-pending">${b.status}</strong></div>
       </div>
       <p class="payment-disclaimer">Demo checkout: no money was charged. Live payments require a payment gateway and server-side verification.</p>
-      <a href="booking.html" class="btn btn-primary">Make Another Booking</a>`;
+      <div class="confirm-actions"><a href="trips.html" class="btn btn-primary">View My Trips</a><a href="booking.html" class="btn btn-outline">Make Another Booking</a></div>`;
     document.getElementById("confirmationBox").classList.remove("hidden");
     form.closest("section").classList.add("hidden");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -633,7 +735,7 @@ pages.admin = () => {
   document.getElementById("bookingRows").addEventListener("click", e => {
     const btn = e.target.closest(".js-status");
     if (!btn) return;
-    const flow = { Pending: "Confirmed", Confirmed: "Completed", Completed: "Pending" };
+    const flow = { Pending: "Confirmed", Confirmed: "Completed", Completed: "Pending", Cancelled: "Pending" };
     const bookings = load("re_bookings", []);
     const b = bookings.find(x => x.id === +btn.dataset.id);
     if (b) { b.status = flow[b.status] || "Pending"; save("re_bookings", bookings); render(); }
@@ -641,8 +743,100 @@ pages.admin = () => {
   render();
 };
 
+const fmtDate = s => new Date(s + "T00:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+const todayStr = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); };
+
+pages.trips = () => {
+  const user = requireLogin();
+  if (!user) return;
+  const list = document.getElementById("tripList");
+  const tabs = [...document.querySelectorAll("#tripTabs .filter-btn")];
+  let tab = "upcoming";
+  const mine = () => load("re_bookings", []).filter(b => b.userEmail === user.email).sort((a, b) => b.id - a.id);
+  const vehicleOf = b => VEHICLES.find(v => v.id === b.vehicleId) || VEHICLES.find(v => v.name === b.vehicle);
+  const bucket = b => b.status === "Cancelled" ? "cancelled" : (b.status === "Completed" || b.returnDate < todayStr()) ? "past" : "upcoming";
+
+  const render = () => {
+    tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
+    const all = mine();
+    tabs.forEach(t => { const n = all.filter(b => bucket(b) === t.dataset.tab).length; t.dataset.count = n; });
+    const items = all.filter(b => bucket(b) === tab);
+    if (!items.length) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">🧾</div><h3>No ${tab} trips</h3>
+        <p>${tab === "upcoming" ? "Book a bike or car and it will show up here." : "Nothing to show yet."}</p>
+        <a href="vehicles.html" class="btn btn-primary btn-small">Browse vehicles</a></div>`;
+      return;
+    }
+    list.innerHTML = items.map(b => {
+      const v = vehicleOf(b);
+      const q = encodeURIComponent(b.location);
+      const cancellable = tab === "upcoming";
+      return `<article class="trip-card">
+        <div class="trip-photo">${v ? vehiclePhoto(v, 400) : ""}</div>
+        <div class="trip-body">
+          <div class="trip-top"><h3>${esc(b.vehicle)}</h3><span class="status-tag status-${b.status.toLowerCase()}">${b.status}</span></div>
+          <p class="trip-dates">${fmtDate(b.pickupDate)} → ${fmtDate(b.returnDate)} · ${b.days} day${b.days > 1 ? "s" : ""}</p>
+          <p class="trip-loc">📍 ${esc(b.location)}</p>
+          <p class="trip-meta">Booking #${b.id} · ${esc(b.paymentMethod)} · <strong>₹${b.totalCost}</strong></p>
+          <div class="trip-actions">
+            <a class="btn btn-small btn-outline" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${q}">Directions</a>
+            ${v && tab !== "upcoming" ? `<a class="btn btn-small btn-primary" href="booking.html?vehicle=${v.id}">Book again</a>` : ""}
+            ${cancellable ? `<button class="btn btn-small btn-danger js-cancel" data-id="${b.id}">Cancel</button>` : ""}
+          </div>
+        </div></article>`;
+    }).join("");
+  };
+  tabs.forEach(t => t.addEventListener("click", () => { tab = t.dataset.tab; render(); }));
+  list.addEventListener("click", e => {
+    const btn = e.target.closest(".js-cancel");
+    if (!btn) return;
+    if (!confirm("Cancel this booking?")) return;
+    const all = load("re_bookings", []);
+    const b = all.find(x => x.id === +btn.dataset.id && x.userEmail === user.email);
+    if (b) { b.status = "Cancelled"; save("re_bookings", all); showFlash("Booking #" + b.id + " cancelled.", "success"); render(); }
+  });
+  render();
+};
+
+pages.profile = () => {
+  const user = requireLogin();
+  if (!user) return;
+  const bookings = load("re_bookings", []).filter(b => b.userEmail === user.email);
+  document.getElementById("profileAvatar").textContent = (user.name.trim()[0] || "U").toUpperCase();
+  document.getElementById("profileName").textContent = user.name;
+  document.getElementById("profileEmail").textContent = user.email;
+  document.getElementById("statTrips").textContent = bookings.filter(b => b.status !== "Cancelled").length;
+  document.getElementById("statUpcoming").textContent = bookings.filter(b => b.status !== "Cancelled" && b.status !== "Completed" && b.returnDate >= todayStr()).length;
+  document.getElementById("statSaved").textContent = getSaved().length;
+  const n = document.getElementById("pName"), m = document.getElementById("pMobile");
+  n.value = user.name; m.value = user.mobile || "";
+  m.addEventListener("input", () => { m.value = m.value.replace(/\D/g, "").slice(0, 10); });
+  document.getElementById("profileForm").addEventListener("submit", e => {
+    e.preventDefault();
+    if (!n.value.trim()) return showFlash("Name is required.", "error");
+    if (!/^\d{10}$/.test(m.value)) return showFlash("Enter a valid 10-digit mobile number.", "error");
+    const users = getUsers();
+    const u = users.find(x => x.email === user.email);
+    u.name = n.value.trim(); u.mobile = m.value;
+    save("re_users", users);
+    document.getElementById("profileName").textContent = u.name;
+    document.getElementById("profileAvatar").textContent = u.name[0].toUpperCase();
+    showFlash("Profile updated.", "success");
+  });
+  document.getElementById("profileLogout").addEventListener("click", logout);
+  const ib = document.getElementById("installBtn");
+  if (deferredInstall) ib.hidden = false;
+  ib.addEventListener("click", async () => {
+    if (!deferredInstall) return;
+    deferredInstall.prompt();
+    await deferredInstall.userChoice;
+    deferredInstall = null; ib.hidden = true;
+  });
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   renderLayout();
+  initPwa();
   const init = pages[document.body.dataset.page];
   if (init) init();
 });

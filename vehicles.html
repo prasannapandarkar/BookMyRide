@@ -2,7 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1E2530">
+<meta name="description" content="RideEasy – rent bikes and cars in minutes.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RideEasy">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
 <title>Vehicles - RideEasy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,22 +27,38 @@
   <p class="hero-desc">Choose from a range of well-maintained bikes and cars for every kind of journey.</p>
 </section>
 
-<section class="filter-bar">
+<section class="search-bar">
+  <label class="search-field"><span aria-hidden="true">🔎</span><input type="search" id="vSearch" placeholder="Search bikes &amp; cars" autocomplete="off" aria-label="Search vehicles"></label>
+  <select id="vSort" aria-label="Sort vehicles">
+    <option value="featured">Sort: Featured</option>
+    <option value="low">Price: low to high</option>
+    <option value="high">Price: high to low</option>
+  </select>
+</section>
+<section class="filter-bar" id="vFilters">
   <button class="filter-btn active" data-filter="All">All</button>
   <button class="filter-btn" data-filter="Bike">Bikes</button>
   <button class="filter-btn" data-filter="Car">Cars</button>
+  <button class="filter-btn" data-filter="Available">Available</button>
+  <button class="filter-btn" data-filter="Saved">❤ Saved</button>
 </section>
-
+<p class="result-count" id="resultCount" aria-live="polite"></p>
 <section class="vehicle-grid" id="vehicleGrid"></section>
 
-<div class="modal-overlay" id="detailsModal">
-  <div class="modal-box">
-    <button class="modal-close" id="modalClose">&times;</button>
+<div class="empty-state hidden" id="vEmpty"><div class="empty-icon">🔍</div><h3>No vehicles found</h3><p>Try a different search or clear the filters.</p><button class="btn btn-outline btn-small" id="vReset">Clear filters</button></div>
+
+<div class="modal-overlay" id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+  <div class="modal-box sheet">
+    <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
     <div class="modal-emoji" id="modalIcon"></div>
     <span class="vehicle-type" id="modalType"></span>
     <h3 id="modalName"></h3>
+    <div class="spec-chips" id="modalSpecs"></div>
     <p id="modalDesc"></p>
-    <p class="vehicle-price" id="modalPrice"></p>
+    <div class="sheet-foot">
+      <p class="vehicle-price" id="modalPrice"></p>
+      <a href="booking.html" class="btn btn-primary" id="modalBook">Book Now</a>
+    </div>
   </div>
 </div>
 </main>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1E2530">
+<meta name="description" content="RideEasy – rent bikes and cars in minutes.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RideEasy">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<title>Profile - RideEasy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="profile">
+<main>
+
+<section class="page-header">
+  <p class="hero-eyebrow">Account</p>
+  <h1>Your Profile</h1>
+</section>
+<section class="profile-wrap">
+  <div class="profile-card">
+    <div class="avatar" id="profileAvatar">R</div>
+    <div class="profile-head"><h2 id="profileName"></h2><p id="profileEmail"></p></div>
+    <div class="profile-stats">
+      <div><strong id="statTrips">0</strong><span>Trips</span></div>
+      <div><strong id="statUpcoming">0</strong><span>Upcoming</span></div>
+      <div><strong id="statSaved">0</strong><span>Saved</span></div>
+    </div>
+  </div>
+  <form class="app-form profile-form" id="profileForm" novalidate>
+    <h3>Edit details</h3>
+    <div class="form-group"><label for="pName">Full name</label><input type="text" id="pName" required></div>
+    <div class="form-group"><label for="pMobile">Mobile number</label><input type="tel" id="pMobile" maxlength="10" required></div>
+    <button type="submit" class="btn btn-primary">Save changes</button>
+  </form>
+  <div class="menu-list">
+    <a href="trips.html" class="menu-item"><span>🧾</span><div><strong>My trips</strong><small>Upcoming and past bookings</small></div><i>›</i></a>
+    <a href="documents.html" class="menu-item"><span>🪪</span><div><strong>Documents</strong><small>Aadhaar and driving licence</small></div><i>›</i></a>
+    <a href="vehicles.html?saved=1" class="menu-item"><span>❤️</span><div><strong>Saved vehicles</strong><small>Your favourites</small></div><i>›</i></a>
+    <a href="admin.html" class="menu-item"><span>🛠️</span><div><strong>Admin dashboard</strong><small>Manage fleet and bookings</small></div><i>›</i></a>
+    <button type="button" class="menu-item" id="installBtn" hidden><span>📲</span><div><strong>Install RideEasy</strong><small>Add to your home screen</small></div><i>›</i></button>
+    <button type="button" class="menu-item menu-danger" id="profileLogout"><span>🚪</span><div><strong>Log out</strong><small>Sign out of this device</small></div><i>›</i></button>
+  </div>
+</section>
+
+</main>
+<script src="js/main.js"></script>
+</body>
+</html>

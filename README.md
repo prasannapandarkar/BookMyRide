@@ -16,3 +16,11 @@ Double-click `index.html` (or open it in your browser / VS Code "Live Server").
 - Booking, Documents and Admin require login.
 - Document upload only validates the file (type/size) and remembers its name; nothing is uploaded.
 - Vehicle prices are at the top of `js/main.js` in the `VEHICLES` list.
+
+## App features
+- **Installable (PWA):** `manifest.webmanifest`, `sw.js` and `icons/`. Works offline after the first visit. Needs to be served over http(s) (e.g. GitHub Pages or `python3 -m http.server`), not opened as a file.
+- **Phone-style navigation:** bottom tab bar (Home, Vehicles, Book, Trips, Profile) on phones, top bar on desktop.
+- **Vehicles:** search, sort, filters, saved favourites, details sheet with specs.
+- **Booking:** live price breakdown, Google Maps pickup preview, UPI ID typed by the user each time.
+- **My Trips:** upcoming / past / cancelled, directions, cancel, book again.
+- **Profile:** edit name and mobile, saved vehicles, install button, logout.

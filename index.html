@@ -2,7 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1E2530">
+<meta name="description" content="RideEasy – rent bikes and cars in minutes.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RideEasy">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
 <title>RideEasy - Rent Your Ride, Your Way</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,27 +25,24 @@
   <div class="hero-text">
     <p class="hero-eyebrow">Bike &amp; Car Rentals</p>
     <h1>Rent Your Ride,<br>Your Way</h1>
-    <p class="hero-desc">
-      From a quick scooter ride across town to a weekend road trip in an SUV —
-      RideEasy connects you to a wide range of bikes and cars, ready whenever you are.
-      Simple booking, transparent pricing, no hidden charges.
-    </p>
-    <div class="hero-actions">
-      <a href="booking.html" class="btn btn-primary">Book Now</a>
-      <a href="vehicles.html" class="btn btn-outline">Browse Vehicles</a>
-    </div>
+    <p class="hero-desc">Scooters, bikes and cars ready whenever you are. Simple booking, transparent pricing, no hidden charges.</p>
+    <form class="quick-book" id="quickBook">
+      <label class="quick-field"><span aria-hidden="true">📍</span><input type="text" id="quickLoc" placeholder="Pickup location, e.g. Station Road" aria-label="Pickup location" autocomplete="off"></label>
+      <button type="submit" class="btn btn-primary">Book a ride</button>
+    </form>
     <div class="hero-stats">
-      <div><strong>8+</strong><span>Vehicles Listed</span></div>
+      <div><strong>8+</strong><span>Vehicles</span></div>
       <div><strong>24/7</strong><span>Support</span></div>
-      <div><strong>2</strong><span>Cities Covered</span></div>
+      <div><strong>₹200</strong><span>Starting / day</span></div>
     </div>
   </div>
-  <div class="hero-visual" aria-hidden="true">
-    <div class="hero-card card-1">🏍️<span>Royal Enfield</span></div>
-    <div class="hero-card card-2">🚗<span>Swift</span></div>
-    <div class="hero-card card-3">🛵<span>Activa 6G</span></div>
-    <div class="hero-lane"></div>
-  </div>
+  <div class="hero-visual" id="heroPhotos" aria-hidden="true"></div>
+</section>
+
+<section class="category-tiles">
+  <a href="vehicles.html?type=Bike" class="cat-tile"><span class="cat-emoji">🏍️</span><div><strong>Bikes &amp; Scooters</strong><small>From ₹200 / day</small></div></a>
+  <a href="vehicles.html?type=Car" class="cat-tile"><span class="cat-emoji">🚗</span><div><strong>Cars &amp; SUVs</strong><small>From ₹1,200 / day</small></div></a>
+  <a href="trips.html" class="cat-tile"><span class="cat-emoji">🧾</span><div><strong>My trips</strong><small>Track your bookings</small></div></a>
 </section>
 
 <div class="dashed-divider" aria-hidden="true"></div>
