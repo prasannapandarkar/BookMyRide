@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Vehicle - RideEasy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body data-page="booking">
+    <main>
+
+        <section class="page-header">
+            <p class="hero-eyebrow">Booking</p>
+            <h1>Book Your Vehicle</h1>
+            <p class="hero-desc">Fill in your details below. We'll calculate your estimated cost automatically.</p>
+        </section>
+
+        <section class="confirmation-box hidden" id="confirmationBox"></section>
+
+        <section class="form-section">
+            <form class="app-form" id="bookingForm" novalidate>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Customer Name</label>
+                        <input type="text" id="name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="tel" id="mobile" placeholder="10-digit mobile number" maxlength="10" required>
+                        <small class="field-hint" id="mobileHint"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_id">Select Vehicle</label>
+                        <select id="vehicle_id" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Pickup Location</label>
+                        <input type="text" id="location" placeholder="e.g. Station Road, Aurangabad" required>
+                        <div class="map-actions">
+                            <button type="button" class="btn btn-small btn-outline" id="useMyLocation">📍 Use my current location</button>
+                            <a class="map-link hidden" id="mapOpenLink" href="#" target="_blank" rel="noopener">Open in Google Maps ↗</a>
+                            <a class="map-link hidden" id="mapDirLink" href="#" target="_blank" rel="noopener">Get directions ↗</a>
+                        </div>
+                        <div class="map-box hidden" id="mapBox">
+                            <iframe id="mapFrame" title="Pickup location on Google Maps" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pickup_date">Pickup Date</label>
+                        <input type="date" id="pickup_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="return_date">Return Date</label>
+                        <input type="date" id="return_date" required>
+                    </div>
+                </div>
+                <div class="cost-estimate">
+                    <div><span>Rental Duration</span><strong id="durationOut">-- day(s)</strong></div>
+                    <div><span>Total Estimated Cost</span><strong id="costOut">₹0</strong></div>
+                </div>
+                <section class="payment-panel" aria-labelledby="paymentTitle">
+                    <div class="payment-heading">
+                        <div>
+                            <p class="hero-eyebrow">Secure checkout</p>
+                            <h2 id="paymentTitle">Choose Payment Method</h2>
+                        </div>
+                        <span class="payment-lock">▣ Demo checkout</span>
+                    </div>
+                    <p class="payment-subtitle">Select how you would like to pay for your RideEasy booking.</p>
+                    <div class="payment-methods">
+                        <label class="payment-option"><input type="radio" name="paymentMethod" value="UPI" checked><span class="payment-icon">↗</span><span><strong>UPI</strong><small>Google Pay, PhonePe, Paytm</small></span></label>
+                        <label class="payment-option"><input type="radio" name="paymentMethod" value="Card"><span class="payment-icon">▰</span><span><strong>Credit / Debit Card</strong><small>Visa, Mastercard, RuPay</small></span></label>
+                        <label class="payment-option"><input type="radio" name="paymentMethod" value="Pay on pickup"><span class="payment-icon">₹</span><span><strong>Pay on pickup</strong><small>Pay when you collect the vehicle</small></span></label>
+                    </div>
+                    <div class="payment-detail" id="upiDetails">
+                        <label for="upiIdInput">Enter UPI ID</label>
+                        <div class="upi-id-row"><input type="text" id="upiIdInput" class="upi-id-input" placeholder="name@bank" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email"><button type="button" class="upi-copy-btn" id="copyUpiBtn">Copy</button></div>
+                        <small id="upiIdError" class="upi-id-error"></small>
+                        <small>After paying, keep your UPI transaction ID. The website cannot verify payment automatically.</small>
+                        <div class="upi-qr-box" id="upiQrBox">
+                            <div class="upi-qr-canvas" id="upiQr" aria-label="UPI payment QR code"></div>
+                            <p id="upiQrHint">Scan with any UPI app (Google Pay, PhonePe, Paytm) on your phone. Select a vehicle and dates to include the amount.</p>
+                        </div>
+                        <div class="upi-apps" id="upiApps" aria-label="Open a payment app">
+                            <button type="button" class="upi-app-btn" data-upi-app="gpay"><span class="upi-app-mark gpay-mark">G</span><span>Google Pay</span></button>
+                            <button type="button" class="upi-app-btn" data-upi-app="phonepe"><span class="upi-app-mark phonepe-mark">पे</span><span>PhonePe</span></button>
+                            <button type="button" class="upi-app-btn" data-upi-app="paytm"><span class="upi-app-mark paytm-mark">P</span><span>Paytm</span></button>
+                            <button type="button" class="upi-app-btn" data-upi-app="upi"><span class="upi-app-mark other-upi-mark">↗</span><span>Other UPI app</span></button>
+                        </div>
+                    </div>
+                    <div class="payment-detail hidden" id="cardDetails">
+                        <div class="card-preview"><span>RIDEEASY</span><strong>•••• &nbsp; •••• &nbsp; •••• &nbsp; ••••</strong><small>Card payment interface preview</small></div>
+                        <small>For your safety, this demo does not collect card numbers or CVV. Connect a payment provider to accept cards.</small>
+                    </div>
+                    <div class="payment-detail hidden" id="pickupDetails">
+                        <p>You can pay the rental amount at the time of vehicle pickup.</p>
+                    </div>
+                    <div class="payment-total"><span>Amount due</span><strong id="paymentTotal">₹0</strong></div>
+                    <p class="payment-disclaimer">🔒 Demo interface only — no money will be charged and no real transaction is created.</p>
+                </section>
+                <button type="submit" class="btn btn-primary btn-large">Confirm Booking &amp; Payment Method</button>
+            </form>
+        </section>
+    </main>
+    <script src="js/qrcode.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

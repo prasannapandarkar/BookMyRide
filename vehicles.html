@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vehicles - RideEasy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="vehicles">
+<main>
+
+<section class="page-header">
+  <p class="hero-eyebrow">Fleet</p>
+  <h1>Our Vehicles</h1>
+  <p class="hero-desc">Choose from a range of well-maintained bikes and cars for every kind of journey.</p>
+</section>
+
+<section class="filter-bar">
+  <button class="filter-btn active" data-filter="All">All</button>
+  <button class="filter-btn" data-filter="Bike">Bikes</button>
+  <button class="filter-btn" data-filter="Car">Cars</button>
+</section>
+
+<section class="vehicle-grid" id="vehicleGrid"></section>
+
+<div class="modal-overlay" id="detailsModal">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="modal-emoji" id="modalIcon"></div>
+    <span class="vehicle-type" id="modalType"></span>
+    <h3 id="modalName"></h3>
+    <p id="modalDesc"></p>
+    <p class="vehicle-price" id="modalPrice"></p>
+  </div>
+</div>
+</main>
+<script src="js/main.js"></script>
+</body>
+</html>

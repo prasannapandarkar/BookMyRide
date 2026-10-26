@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - RideEasy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="admin">
+<main>
+
+<section class="page-header">
+  <p class="hero-eyebrow">Admin</p>
+  <h1>Dashboard</h1>
+  <p class="hero-desc">Overview of vehicles, bookings, and document verifications.</p>
+</section>
+
+<section class="stats-grid">
+  <div class="stat-card"><span class="stat-icon">🚗</span><div><strong id="totalVehicles">0</strong><span>Total Vehicles</span></div></div>
+  <div class="stat-card"><span class="stat-icon">📋</span><div><strong id="totalBookings">0</strong><span>Total Bookings</span></div></div>
+  <div class="stat-card"><span class="stat-icon">📄</span><div><strong id="pendingDocs">0</strong><span>Pending Document Checks</span></div></div>
+</section>
+
+<section class="admin-section">
+  <div class="section-head"><h2>Manage Vehicles</h2></div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Icon</th><th>Name</th><th>Type</th><th>Price/Day</th><th>Status</th></tr></thead>
+      <tbody id="vehicleRows"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="admin-section">
+  <div class="section-head"><h2>Customer Bookings</h2></div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Customer</th><th>Vehicle</th><th>Dates</th><th>Cost</th><th>Status</th><th></th></tr></thead>
+      <tbody id="bookingRows"></tbody>
+    </table>
+  </div>
+</section>
+</main>
+<script src="js/main.js"></script>
+</body>
+</html>

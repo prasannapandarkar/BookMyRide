@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documents - RideEasy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="documents">
+<main>
+
+<section class="page-header">
+  <p class="hero-eyebrow">Verification</p>
+  <h1>Upload Your Documents</h1>
+  <p class="hero-desc">We need your Aadhaar Card and Driving Licence to verify your identity before renting a vehicle.</p>
+</section>
+
+<div class="demo-notice">
+  ⚠️ <strong>Demo notice:</strong> This is a UI demonstration for a college project only.
+  Files are checked in your browser but <strong>not</strong> uploaded or verified anywhere — only the file name is remembered.
+</div>
+
+<section class="documents-section">
+  <div class="doc-card" data-doc="aadhaar">
+    <div class="doc-card-head">
+      <span class="doc-icon">🪪</span>
+      <div><h3>Aadhaar Card</h3><p>Accepted formats: PDF, JPG, PNG (max 5MB)</p></div>
+    </div>
+    <label class="upload-btn">
+      Choose File
+      <input type="file" class="doc-input" accept=".pdf,.jpg,.jpeg,.png" data-type="aadhaar" hidden>
+    </label>
+    <p class="file-name" id="aadhaar-filename">No file selected</p>
+    <p class="upload-error" id="aadhaar-error"></p>
+    <div class="status-tag status-pending" id="aadhaar-status">Pending</div>
+  </div>
+  <div class="doc-card" data-doc="license">
+    <div class="doc-card-head">
+      <span class="doc-icon">🚘</span>
+      <div><h3>Driving Licence</h3><p>Accepted formats: PDF, JPG, PNG (max 5MB)</p></div>
+    </div>
+    <label class="upload-btn">
+      Choose File
+      <input type="file" class="doc-input" accept=".pdf,.jpg,.jpeg,.png" data-type="license" hidden>
+    </label>
+    <p class="file-name" id="license-filename">No file selected</p>
+    <p class="upload-error" id="license-error"></p>
+    <div class="status-tag status-pending" id="license-status">Pending</div>
+  </div>
+</section>
+    <div class="doc-card" data-doc="idproof">
+    <div class="doc-card-head">
+      <span class="doc-icon">🆔</span>
+      <div>
+        <h3>ID Proof</h3>
+        <p>PAN, Passport or Voter ID · PDF, JPG, PNG (max 5MB)</p>
+      </div>
+    </div>
+    <label class="upload-btn">
+      Choose File
+      <input type="file" class="doc-input" accept=".pdf,.jpg,.jpeg,.png" data-type="idproof" hidden>
+    </label>
+    <p class="file-name" id="idproof-filename">No file selected</p>
+    <p class="upload-error" id="idproof-error"></p>
+    <div class="status-tag status-pending" id="idproof-status">Pending</div>
+  </div>
+</main>
+<script src="js/main.js"></script>
+</body>
+</html>
